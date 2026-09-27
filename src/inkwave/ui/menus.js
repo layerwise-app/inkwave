@@ -18,6 +18,7 @@ import {
 } from '../config.js';
 import * as LOOK from '../game/character-style.js';
 import { G } from '../core/ctx.js';
+import { stageImage } from '../stages.ts';
 import {
   computeAwards, medalMarkup, awardBadge, awardIcon, rankEmblem, rankTier, RANK_TIERS, inkBurst, InkWipe, createPreview,
   sweepEdge, sweepClip, splatClip, splatCover, skinSwatch, irisSwatch, outfitIcon,
@@ -30,8 +31,7 @@ const WIPES = new Set(['loading>title', 'title>main', 'results>main', 'pause>mai
 const LIGHT = new Set(['main', 'loadout', 'setup', 'locker', 'settings', 'howto', 'credits', 'pause']);
 // Stage art rendered from the real game by tools/stage-shots.mjs: <id>-<day|dusk>[-sm].webp (resolved against this
 // module so the UI lab in tools/ finds them too). Missing art falls back to the layout thumbnail.
-const STAGE_DIR = new URL('../../assets/stages/', import.meta.url).href;
-const stageArt = (id, time, small) => `${STAGE_DIR}${id}-${time === 'dusk' ? 'dusk' : 'day'}${small ? '-sm' : ''}.webp`;
+const stageArt = stageImage;
 const TIME_INFO = {
   day: { label: 'DAY', text: 'Bright sun, crisp shadows.' },
   dusk: { label: 'DUSK', text: 'Low sun, long shadows, harbour lights.' },

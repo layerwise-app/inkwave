@@ -23,6 +23,7 @@ import { CameraRig } from './game/cameraRig.js';
 import { Match } from './game/match.js';
 import { Minimap } from './game/minimap.js';
 import { Showcase } from './game/showcase.js';
+import { lightmapImage, lightmapMetadata } from './assets.js';
 
 const params = new URLSearchParams(location.search);
 const nextFrame = () => new Promise((r) => requestAnimationFrame(() => r()));
@@ -32,17 +33,17 @@ function loadJSON(key, def) { try { const v = JSON.parse(localStorage.getItem(ke
 function saveJSON(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch { /* private mode */ } }
 const DEFAULT_PROFILE = { name: 'Player', level: 1, xp: 0, wins: 0, matches: 0, totalTurf: 0, weapon: 'shooter' };
 
-async function loadModule(path, stubName) {
-  try { return await import(path); }
+async function loadModule(loader, stubName) {
+  try { return await loader(); }
   catch (e) {
-    console.error(`[inkwave] failed to load ${path} — using stub`, e);
+    console.error('[inkwave] failed to load a game module — using stub', e);
     const stubs = await import('./dev/stubs.js');
     return stubName ? stubs : {};
   }
 }
 
 class Game {
-  async boot() {
+  async boot({ app, uiRoot, fadeEl, bootError }) {
     const t0 = performance.now();
     // real top-down thumbnails for the stage cards, generated from each layout's geometry
     for (const m of MAPS) { try { m.thumb = layoutThumbSVG(MAP_LAYOUTS[m.layout || m.id], m.theme); } catch (e) { console.warn('thumb', m.id, e); } }
@@ -50,12 +51,11 @@ class Game {
     // v1.1: fov became horizontal — migrate old vertical values once
     if (this.settings.fovMode !== 'h') { this.settings.fov = DEFAULT_SETTINGS.fov; this.settings.fovMode = 'h'; saveJSON('inkwave.settings', this.settings); }
     this.profile = loadJSON('inkwave.profile', DEFAULT_PROFILE);
-    const app = document.getElementById('app');
-    this.uiRoot = document.getElementById('ui-root');
-    this.fadeEl = document.getElementById('fade');
+    this.uiRoot = uiRoot;
+    this.fadeEl = fadeEl;
 
     // UI first so the loading screen shows immediately
-    const [menusMod, hudMod] = await Promise.all([loadModule('./ui/menus.js'), loadModule('./ui/hud.js')]);
+    const [menusMod, hudMod] = await Promise.all([loadModule(() => import('./ui/menus.js')), loadModule(() => import('./ui/hud.js'))]);
     this.menus = G.menus = menusMod.Menus ? new menusMod.Menus(this.uiRoot, this._menuApi()) : null;
     this.hud = G.hud = hudMod.HUD ? new hudMod.HUD(this.uiRoot, { playSound: (n, o) => G.audio?.play(n, o) }) : null;
     // map diorama pins/finish live inside the HUD layer (under every other HUD element)
@@ -83,8 +83,8 @@ class Game {
 
     // modules built by other authors
     const [charMod, fxMod, envMod, audioMod, musicMod] = await Promise.all([
-      loadModule('./game/character.js', true), loadModule('./fx/fx.js', true), loadModule('./world/environment.js', true),
-      loadModule('./audio/audio.js', true), loadModule('./audio/music.js', true),
+      loadModule(() => import('./game/character.js'), true), loadModule(() => import('./fx/fx.js'), true), loadModule(() => import('./world/environment.js'), true),
+      loadModule(() => import('./audio/audio.js'), true), loadModule(() => import('./audio/music.js'), true),
     ]);
     this.CharacterClass = charMod.Character;
     try { this.PropKit = (await import('./world/props.js')).PropKit; } catch (e) { console.error('[inkwave] prop kit failed to load', e); this.PropKit = null; }
@@ -226,10 +226,11 @@ class Game {
   // Baked AO (tools/bake-ao.mjs). Applied only when the bake matches this exact layout.
   async _loadLightmap(level, layoutId) {
     try {
-      const meta = await (await fetch(`assets/lightmaps/${layoutId}.json`, { cache: 'no-cache' })).json();
+      const meta = lightmapMetadata(layoutId);
+      if (!meta) throw new Error(`Missing lightmap metadata for ${layoutId}`);
       level.layoutLightmap(meta.ppm, meta.size);
       if (level.layoutHash !== meta.hash) { console.warn(`[inkwave] lightmap for ${layoutId} is stale — re-run tools/bake-ao.mjs`); level.lightSize = 0; for (const f of level.faces) f.light = null; return null; }
-      const tex = await new THREE.TextureLoader().loadAsync(`assets/lightmaps/${layoutId}.png?h=${meta.hash}`);
+      const tex = await new THREE.TextureLoader().loadAsync(lightmapImage(layoutId));
       tex.colorSpace = THREE.NoColorSpace;
       tex.generateMipmaps = true; tex.minFilter = THREE.LinearMipmapLinearFilter; tex.magFilter = THREE.LinearFilter;
       tex.anisotropy = 4;
@@ -900,9 +901,18 @@ class Game {
   }
 }
 
-const game = new Game();
-game.boot().catch((e) => {
-  console.error(e);
-  const el = document.getElementById('boot-error');
-  if (el) { el.textContent = 'Something went wrong while loading: ' + e.message; el.style.display = 'block'; }
-});
+export async function startInkwave(elements) {
+  const game = new Game();
+  try {
+    await game.boot(elements);
+    return game;
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : String(error);
+    const el = elements.bootError;
+    if (el) {
+      el.textContent = 'Something went wrong while loading: ' + message;
+      el.style.display = 'block';
+    }
+  }
+}

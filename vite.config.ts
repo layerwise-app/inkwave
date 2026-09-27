@@ -4,6 +4,9 @@ import viteReact from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { cloudflare } from '@cloudflare/vite-plugin';
 import { layerwise } from '@layerwise/vite';
+import { resolve } from 'node:path';
+
+const inkwaveRoot = resolve(import.meta.dirname, 'src/inkwave');
 
 export default defineConfig({
   server: {
@@ -20,7 +23,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@tanstack/start': '@tanstack/react-start'
+      '@tanstack/start': '@tanstack/react-start',
+      'three/addons/': resolve(inkwaveRoot, 'vendor/three/jsm') + '/',
+      three: resolve(inkwaveRoot, 'vendor/three/build/three.module.js')
     },
     tsconfigPaths: true
   },

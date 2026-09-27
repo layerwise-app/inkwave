@@ -355,8 +355,8 @@ const FONT_D = 'InkwavePropsDisplay', FONT_T = 'InkwavePropsText';
 function loadFonts() {
   if (_fontPromise) return _fontPromise;
   if (typeof FontFace === 'undefined' || typeof document === 'undefined') return (_fontPromise = Promise.resolve());
-  const d = new FontFace(FONT_D, `url(${new URL('../../assets/fonts/TitanOne-latin.woff2', import.meta.url)})`);
-  const t = new FontFace(FONT_T, `url(${new URL('../../assets/fonts/Rubik-latin.woff2', import.meta.url)})`, { weight: '400 900' });
+  const d = new FontFace(FONT_D, 'url(/inkwave/assets/fonts/TitanOne-latin.woff2)');
+  const t = new FontFace(FONT_T, 'url(/inkwave/assets/fonts/Rubik-latin.woff2)', { weight: '400 900' });
   _fontPromise = Promise.all([d.load(), t.load()]).then((f) => { f.forEach((x) => document.fonts.add(x)); }).catch(() => {});
   return _fontPromise;
 }

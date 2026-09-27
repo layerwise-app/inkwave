@@ -3,8 +3,8 @@
    INKWAVE — UI (menus + HUD). Everything is namespaced .iw-*.
    Sizing unit --u = 1/100 of a 16:9 frame fitted to the viewport (16px at 1600x900).
    ===================================================================================== */
-@font-face { font-family: 'Titan One'; src: url('../assets/fonts/TitanOne-latin.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Rubik'; src: url('../assets/fonts/Rubik-latin.woff2') format('woff2'); font-weight: 400 900; font-style: normal; font-display: block; }
+@font-face { font-family: 'Titan One'; src: url('/inkwave/assets/fonts/TitanOne-latin.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: 'Rubik'; src: url('/inkwave/assets/fonts/Rubik-latin.woff2') format('woff2'); font-weight: 400 900; font-style: normal; font-display: block; }
 
 #ui-root { position: fixed; inset: 0; z-index: 10; pointer-events: none; overflow: hidden; user-select: none; -webkit-user-select: none; }
 
