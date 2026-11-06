@@ -22,7 +22,10 @@ export const Route = createRootRouteWithContext<{
     meta: [
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      ...seo({ title: 'My App', description: 'Built with TanStack Start' })
+      ...seo({
+        title: 'INKWAVE — Turf Riot',
+        description: 'An original 4v4 turf-war ink shooter that runs in your browser.'
+      })
     ],
     links: [{ rel: 'icon', href: '/favicon.ico' }]
   }),

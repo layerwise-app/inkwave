@@ -311,6 +311,12 @@
 .iw-title.is-go .iw-title__presstext { animation: iw-go-flash .3s steps(2) 2, iw-press-pulse 1.5s ease-in-out infinite; color: var(--a); }
 @keyframes iw-go-flash { 50% { opacity: .2; } }
 .iw-title .iw-corner--bl b { font-family: 'Titan One', sans-serif; font-weight: 400; letter-spacing: .06em; }
+/* "Make your own game with Layerwise": a small, muted credit in the title screen's top-right corner, set like the
+   bottom corners. The padding is a click target; the negative margin keeps the text on the corners' inset. */
+.iw-made { position: absolute; top: calc(var(--u) * 2 + var(--sat)); right: calc(var(--u) * 3.4 + var(--sar));
+  padding: .7em .5em; margin: -.7em -.5em; font: 600 var(--fs-xs) / 1 'Rubik', sans-serif; letter-spacing: .04em;
+  color: rgba(255, 255, 255, .62); text-decoration: none; text-shadow: 0 1px 2px rgba(0, 0, 0, .7); transition: color .2s; }
+.iw-made:hover, .iw-made:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: .22em; }
 
 /* ------------------------------------------------------------------ MAIN */
 .iw-main__logo { position: absolute; left: calc(var(--u) * 3.4); top: calc(var(--u) * 2.6); }

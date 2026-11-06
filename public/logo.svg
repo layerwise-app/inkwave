@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Inkwave</title>
+  <!-- Two-tone ink splat (cobalt behind, tangerine in front) on the UI dark ink, with a white wave crest
+       outlined in the same dark ink as the game chunky display type. -->
+  <defs>
+    <clipPath id="tile"><rect width="1024" height="1024" rx="224"/></clipPath>
+    <path id="splat" d="M748.6 644.9C738.2 663.7 750.4 718.3 759.9 732C769.3 745.7 804 715.2 805.2 727.2C806.4 739.1 786.7 785.9 767 803.6C747.3 821.3 698.7 835.9 687 833.4C675.3 831 725.1 799.7 696.6 788.9C668.2 778 563 763.8 516.3 768.2C469.7 772.6 453.6 828.8 416.7 815.3C379.8 801.7 328.8 711.4 294.7 686.9C260.5 662.4 230.4 663.6 211.6 668.4C192.9 673.1 196.4 717.9 182.3 715.3C168.2 712.6 135.3 676.7 126.9 652.2C118.5 627.8 122.4 579.3 131.9 568.5C141.4 557.7 161.7 605.7 183.9 587.5C206 569.2 253.2 498.9 264.9 458.8C276.5 418.7 232 374 253.8 346.7C275.7 319.4 356.8 318.8 396.2 295.2C435.5 271.7 450.5 208.6 489.8 205.5C529.2 202.3 585.6 258.8 632.2 276.3C678.9 293.8 746.1 280.9 769.7 310.5C793.3 340.2 762.5 418.8 773.9 454.5C785.3 490.2 821.9 517.3 837.9 524.6C853.8 531.8 861.2 488.6 869.5 498.1C877.8 507.6 891.9 555.3 887.6 581.4C883.3 607.4 854.8 648.2 844 654.5C833.1 660.9 838.3 621 822.4 619.4C806.5 617.8 759.1 626.1 748.6 644.9Z"/>
+    <path id="wave" d="M250 650 C350 652 404 600 430 520 C462 420 560 352 664 372 C762 392 806 480 756 548" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </defs>
+  <g clip-path="url(#tile)">
+    <rect width="1024" height="1024" fill="#15121c"/>
+    <use href="#splat" xlink:href="#splat" fill="#2f5bff" transform="translate(-60 50) rotate(-12 512 520)"/>
+    <use href="#splat" xlink:href="#splat" fill="#ff8a14"/>
+    <circle cx="881.9" cy="257.5" r="46.7" fill="#ff8a14"/>
+    <g transform="translate(512 520) scale(0.9) translate(-531 -511)">
+      <use href="#wave" xlink:href="#wave" stroke="#15121c" stroke-width="196"/>
+      <use href="#wave" xlink:href="#wave" stroke="#ffffff" stroke-width="126"/>
+    </g>
+  </g>
+</svg>

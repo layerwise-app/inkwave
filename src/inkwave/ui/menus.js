@@ -720,7 +720,12 @@ export class Menus {
       h('div', { class: 'iw-title__logo iw-in iw-in--logo' }, h('i', { class: 'iw-title__shock' }), h('div', { class: 'iw-title__logoin', html: logoMarkup(GAME_TITLE, GAME_SUBTITLE, 'xl') })),
       press,
       h('div', { class: 'iw-corner iw-corner--bl iw-in' }, h('b', null, GAME_TITLE), ' · an original turf-war shooter'),
-      h('div', { class: 'iw-corner iw-corner--br iw-in' }, `v${this._version()}`));
+      h('div', { class: 'iw-corner iw-corner--br iw-in' }, `v${this._version()}`),
+      // Title screen only, so it is gone before a match starts. Clicking it must not also start the game.
+      h('a', {
+        class: 'iw-made iw-in', href: 'https://layerwise.app', target: '_blank', rel: 'noopener noreferrer',
+        onclick: (e) => e.stopPropagation(),
+      }, 'Make your own game with Layerwise'));
     return {
       el, noCursor: true,
       onInputMode: (m) => {
